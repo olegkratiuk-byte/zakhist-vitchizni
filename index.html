@@ -33,61 +33,61 @@
 <div class="container">
     <div id="start-screen" class="active">
         <div class="header">
-            <h1>Тестування: Гранати та міни</h1>
-            <p>Введіть дані та оберіть режим:</p>
+            <h1>🛡️ Тест: Гранати та міни</h1>
+            <p>Введіть дані та оберіть <b>один</b> режим:</p>
         </div>
         <input type="text" id="user-name" placeholder="Ваше Прізвище та Ім'я" style="width:100%; padding:12px; margin-bottom:15px; border:2px solid #e2e8f0; border-radius:8px; box-sizing:border-box;">
         <div class="mode-selector">
-            <button class="btn btn-train" onclick="initQuiz('training')">🚀 ТРЕНУВАННЯ<br><small>З підказками</small></button>
-            <button class="btn btn-exam" onclick="initQuiz('exam')">📝 ЗАЛІК<br><small>На оцінку</small></button>
+            <button class="btn btn-train" onclick="initQuiz('training')">🚀 ТРЕНУВАННЯ<br><small>Можна бачити помилки</small></button>
+            <button class="btn btn-exam" onclick="initQuiz('exam')">📝 ЗАЛІК<br><small>Остаточна оцінка</small></button>
         </div>
     </div>
 
     <div id="quiz-screen" class="question-box">
         <div class="progress-container"><div class="progress-fill" id="progress"></div></div>
-        <div id="q-number" style="color:#64748b; font-size:0.9rem; margin-bottom:10px;"></div>
-        <h2 id="q-text" style="margin-bottom:20px; font-size:1.2rem;"></h2>
+        <div id="q-number" style="color:#64748b; font-size:0.8rem; font-weight: bold; margin-bottom:10px; text-transform: uppercase;"></div>
+        <h2 id="q-text" style="margin-bottom:20px; font-size:1.2rem; line-height: 1.4;"></h2>
         <div id="options-container"></div>
         <div id="explanation" class="explanation"></div>
-        <button id="next-btn" class="btn btn-exam" style="margin-top:20px; display:none;" onclick="loadNext()">Наступне питання →</button>
-        <button class="btn btn-train" style="margin-top:10px; width:100%; font-size:0.8rem;" onclick="resetToMenu()">↩ Перервати та вийти в меню</button>
+        <button id="next-btn" class="btn btn-exam" style="margin-top:20px; display:none; width: 100%;" onclick="loadNext()">Наступне питання →</button>
     </div>
 
     <div id="result-screen">
-        <h2 id="res-title">Результати</h2>
-        <p id="res-user"></p>
+        <h2 id="res-title">Результати завершено</h2>
+        <p id="res-user" style="font-size: 1.1rem;"></p>
         <div class="score-text" id="res-score"></div>
-        <p id="res-info"></p>
-        <button class="btn btn-train" onclick="resetToMenu()">Повернутися в меню</button>
+        <p id="res-info" style="color: #64748b;"></p>
+        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;">
+        <button class="btn btn-train" onclick="location.reload()" style="width: 100%;">↩ Повернутися до вибору режиму</button>
     </div>
 </div>
 
 <script>
 const baseQuestions = [
-    { q: "Що утримує вибухову речовину та формує забійні осколки?", a: ["Запал", "Корпус", "Спусковий важіль"], c: 1, e: "Корпус — це металева оболонка, яка при вибуху розривається на уламки." },
-    { q: "Яка речовина найчастіше використовується як основний заряд?", a: ["Порох", "Пластид", "Тротил"], c: 2, e: "Тротил (ТНТ) — основна вибухова речовина більшості боєприпасів." },
-    { q: "До якого типу належать РГД-5 та РГН?", a: ["Наступальні", "Оборонні", "Термобаричні"], c: 0, e: "РГД-5 — наступальна, бо має невеликий радіус розльоту осколків." },
-    { q: "Звідки дозволяється кидати оборонні гранати (Ф-1)?", a: ["На ходу", "Тільки з укриття", "З будь-якого місця"], c: 1, e: "Оборонні гранати мають великий радіус ураження, тому укриття обов'язкове." },
-    { q: "Радіус ураження осколками наступальної гранати?", a: ["до 10 м", "до 25 м", "до 200 м"], c: 1, e: "Зазвичай до 25 метрів, що менше за дальність кидка." },
-    { q: "Радіус ураження осколками оборонної гранати?", a: ["до 50 м", "до 100 м", "до 200 м"], c: 2, e: "Окремі осколки Ф-1 летять до 200 метрів." },
-    { q: "Яка середня вага оборонної гранати (Ф-1)?", a: ["~310 г", "530-600 г", "понад 1 кг"], c: 1, e: "Оборонні гранати важчі через товстий чавунний корпус." },
-    { q: "Середня дальність кидка наступальної гранати?", a: ["20-30 м", "40-50 м", "70-80 м"], c: 1, e: "40-50 метрів — стандарт для підготовленого бійця." },
-    { q: "З якого моменту починається запуск підривника?", a: ["Після висмикування чеки", "Після відпускання важеля в польоті", "Після удару об землю"], c: 1, e: "Ударник б'є по капсулю лише тоді, коли важіль відлітає від корпусу." },
-    { q: "Затримка запалу УЗРГМ до детонації?", a: ["1,5 – 2 сек", "3,2 – 4,2 сек", "5 – 6 сек"], c: 1, e: "Стандартний час для безпечного польоту гранати." },
-    { q: "Ефект фугасних протипіхотних мін?", a: ["Вибухова хвиля (травми ніг)", "Кругове осколкове ураження", "Секторне ураження"], c: 0, e: "Фугасна міна (як ПМН) розрахована на пошкодження стопи вибухом." },
-    { q: "Зусилля спрацювання міни ПМН-2?", a: ["1-2 кг", "5-25 кг", "понад 50 кг"], c: 1, e: "Це відповідає вазі наступу людини." },
-    { q: "Міна, яку діти сприймають як іграшку?", a: ["ПМН-2", "ОЗМ-72", "ПФМ-1 («Пелюстка»)"], c: 2, e: "Пластикова форма та крило роблять її схожою на іграшку." },
-    { q: "Механізм дії ОЗМ-72 («Міна-жаба»)?", a: ["Вибух під землею", "Вистрибує на 90-110 см", "Димова завісу"], c: 1, e: "Вона вистрибує, щоб осколки летіли горизонтально на рівні тіла." },
-    { q: "Радіус суцільного ураження ОЗМ-72?", a: ["5-10 м", "25-30 м", "100-150 м"], c: 1, e: "У межах 30 метрів ураження майже 100%." },
-    { q: "Кількість елементів у міні ОЗМ-72?", a: ["500", "1000", "2400"], c: 2, e: "Всередині 2400 готових роликів або кульок." },
-    { q: "Особливість мін МОН-50 та МОН-90?", a: ["Кругове ураження", "Спрямована дія (сектор)", "Безпечність"], c: 1, e: "Вони вражають ворога в межах певного кута (сектору)." },
-    { q: "Перший крок при виявленні ВНП?", a: ["Побігти назад", "Зупинитись (Замри)", "Сфотографувати"], c: 1, e: "Головне — не зробити крок на іншу міну чи розтяжку." },
-    { q: "Мінімальна відстань відходу від ВНП?", a: ["10 м", "50 м", "100 м"], c: 2, e: "100 метрів — безпечна зона для більшості боєприпасів." },
-    { q: "Номери для повідомлення про міну?", a: ["103 / 104", "101 / 102", "112 / 103"], c: 1, e: "ДСНС (101) та Поліція (102)." },
-    { q: "Що ЗАБОРОНЕНО робити з боєприпасом?", a: ["Позначати місце", "Відходити", "Торкатися / заливати водою"], c: 2, e: "Будь-який вплив може спровокувати детонацію." },
-    { q: "Одяг, який не можна носити цивільним?", a: ["Яскравий", "Мілітарі / Форма", "Темний"], c: 1, e: "Військовий стиль робить вас ціллю для снайпера чи артилерії." },
-    { q: "Об'єм рюкзака «Екстреної валізи»?", a: ["10 л", "25 л", "100 л"], c: 1, e: "25 літрів — достатньо для необхідного на 72 години." },
-    { q: "Безпечна відстань («зона життя»)?", a: ["50 м", "100 м", "300 м"], c: 2, e: "300 метрів — рекомендована дистанція для повної безпеки." }
+    { q: "Що утримує вибухову речовину та формує забійні осколки під час детонації?", a: ["Запал", "Корпус", "Спусковий важіль"], c: 1, e: "Корпус — це металева оболонка, яка при вибуху розривається на уламки." },
+    { q: "Яка речовина найчастіше використовується як основний вибуховий заряд у гранатах?", a: ["Порох", "Пластид", "Тротил"], c: 2, e: "Тротил (ТНТ) — основна вибухова речовина більшості боєприпасів." },
+    { q: "До якого типу за призначенням належать ручні гранати РГД-5 та РГН?", a: ["Наступальні", "Оборонні", "Термобаричні"], c: 0, e: "РГД-5 — наступальна, бо має невеликий радіус розльоту осколків (до 25м)." },
+    { q: "З якого положення (місця) дозволяється кидати оборонні гранати (Ф-1, РГО)?", a: ["На ходу під час штурму", "Тільки з укриття (окоп, бліндаж)", "З будь-якого зручного положення"], c: 1, e: "Оборонні гранати мають великий радіус ураження, тому укриття обов'язкове." },
+    { q: "Який радіус ураження осколками має наступальна граната?", a: ["до 10 м", "до 25 м", "до 200 м"], c: 1, e: "Зазвичай до 25 метрів, що менше за середню дальність кидка." },
+    { q: "Який радіус ураження осколками має оборонна граната?", a: ["до 50 м", "до 100 м", "до 200 м"], c: 2, e: "Окремі осколки гранати Ф-1 зберігають убивчу силу на відстані до 200 метрів." },
+    { q: "Яка середня вага оборонної гранати (Ф-1, РГО)?", a: ["~310 г", "530-600 г", "понад 1 кг"], c: 1, e: "Оборонні гранати важчі через масивний чавунний корпус." },
+    { q: "Яка середня дальність кидка наступальної гранати?", a: ["20-30 м", "40-50 м", "70-80 м"], c: 1, e: "40-50 метрів — стандартна дистанція для підготовленого бійця." },
+    { q: "З якого моменту починається запуск підривника та горіння порохового уповільнювача?", a: ["Одразу після висмикування чеки", "Після відпускання спускового важеля під час польоту", "Після удару гранати об землю"], c: 1, e: "Ударник б'є по капсулю лише тоді, коли важіль відлітає від корпусу після кидка." },
+    { q: "Скільки секунд становить затримка запалу УЗРГМ до детонації?", a: ["1,5 – 2 секунди", "3,2 – 4,2 секунди", "5 – 6 секунд"], c: 1, e: "Це стандартний час горіння уповільнювача для безпеки того, хто кидає." },
+    { q: "Який основний вражаючий ефект мають фугасні протипіхотні міни?", a: ["Вибухова хвиля (мета: травмування нижніх кінцівок)", "Кругове ураження готовими елементами", "Секторне ураження осколками"], c: 0, e: "Фугасна міна розрахована на виведення з ладу живої сили через руйнування стопи вибухом." },
+    { q: "Від якого зусилля (натискання) спрацьовує фугасна міна ПМН-2?", a: ["1-2 кг", "5-25 кг", "понад 50 кг"], c: 1, e: "Це зусилля відповідає вазі натискання ногою дорослої людини." },
+    { q: "Яку міну через її пластикову форму діти часто сприймають як іграшку?", a: ["ПМН-2", "ОЗМ-72", "ПФМ-1 («Пелюстка»)"], c: 2, e: "Пластиковий корпус і крило роблять її схожою на іграшку, що вкрай небезпечно." },
+    { q: "Який механізм дії має осколкова міна ОЗМ-72 («Міна-жаба») після активації?", a: ["Вибухає глибоко під землею", "Вистрибує на висоту 90-110 см і детонує", "Випускає димову завісу"], c: 1, e: "Вистрибуючи, міна забезпечує ефективніше ураження осколками на рівні тіла." },
+    { q: "Який радіус суцільного ураження (де все живе гине) має міна ОЗМ-72?", a: ["5-10 метрів", "25-30 метрів", "100-150 метрів"], c: 1, e: "На дистанції до 30 метрів щільність осколків майже гарантує ураження." },
+    { q: "Яку кількість вражаючих елементів розкидає осколкова міна ОЗМ-72?", a: ["Близько 500", "Близько 1000", "2400"], c: 2, e: "Всередині корпусу знаходиться 2400 готових вражаючих елементів (роликів)." },
+    { q: "У чому головна особливість мін МОН-50 та МОН-90?", a: ["Вони мають кругове ураження", "Вражають певний сектор перед собою (спрямована дія)", "Вони безпечні для цивільних"], c: 1, e: "МОН (Міна Осколкова Направлена) вражає цілі лише у заданому секторі." },
+    { q: "Який перший крок при виявленні вибухонебезпечного предмета (ВНП)?", a: ["Одразу побігти назад", "Зупинитись і не робити жодного кроку вперед (Замри)", "Підійти ближче, щоб розглянути"], c: 1, e: "Правило 'Замри' критичне, щоб не зачепити інші міни або розтяжки." },
+    { q: "На яку мінімальну відстань необхідно відійти від виявленого ВНП?", a: ["Не менше 10 метрів", "Не менше 50 метрів", "Не менше 100 метрів"], c: 2, e: "100 метрів — безпечна зона для захисту від випадкової детонації більшості боєприпасів." },
+    { q: "За якими номерами потрібно повідомити про виявлення ВНП?", a: ["103 або 104", "101 (ДСНС) або 102 (Поліція)", "112 або 103"], c: 1, e: "ДСНС та Поліція — єдині служби, що мають право працювати з мінами." },
+    { q: "Що категорично ЗАБОРОНЕНО робити з виявленим боєприпасом?", a: ["Позначати місце знахідки на безпечній відстані", "Відходити від нього", "Заливати водою, торкатися або пересувати"], c: 2, e: "Торкатися ВНП смертельно небезпечно, він може детонувати від будь-якого руху." },
+    { q: "Який одяг категорично не рекомендується носити цивільним у зоні боїв?", a: ["Яскравий спортивний одяг", "Армійську форму або одяг мілітарі-стилю", "Будь-який темний одяг"], c: 1, e: "Мілітарі-одяг робить вас схожим на військового, що перетворює вас на ціль." },
+    { q: "Який рекомендований об'єм рюкзака для 'Екстреної валізи'?", a: ["Від 10 літрів", "Від 25 літрів", "Від 100 літрів"], c: 1, e: "25 літрів — оптимальний об'єм для запасу речей та їжі на 72 години." },
+    { q: "Яка мінімальна безпечна відстань вказана як «зона вашого життя»?", a: ["50 метрів", "100 метрів", "300 метрів"], c: 2, e: "300 метрів — це дистанція, на якій ризик ураження осколками мінімальний." }
 ];
 
 let currentMode = '';
@@ -98,31 +98,35 @@ let activeQuestions = [];
 
 function initQuiz(mode) {
     userName = document.getElementById('user-name').value.trim();
-    if (!userName) return alert("Будь ласка, введіть ім'я");
+    if (userName.length < 3) return alert("Введіть ваше Прізвище та Ім'я (мінімум 3 символи)");
     
-    if (mode === 'exam' && localStorage.getItem('exam_done')) {
-        alert("Залік уже складено!");
-        showFinal(JSON.parse(localStorage.getItem('exam_done')));
+    // Блокуємо спробу перездачі заліку
+    if (mode === 'exam' && localStorage.getItem('exam_completed_v1')) {
+        alert("Залік уже було складено раніше!");
+        showFinal(JSON.parse(localStorage.getItem('exam_completed_v1')));
         return;
     }
 
-    // Скидаємо все при кожному старті
+    // Скидання стану для нового проходження
     currentMode = mode;
     currentIdx = 0;
     score = 0;
-    // Перемішуємо питання при кожному вході в будь-який режим
+    
+    // Рандомізація питань ТІЛЬКИ в момент натискання кнопки старту
     activeQuestions = [...baseQuestions].sort(() => Math.random() - 0.5);
 
-    document.getElementById('start-screen').classList.remove('active');
+    // Візуальне перемикання екранів
+    document.getElementById('start-screen').style.display = 'none';
     document.getElementById('result-screen').style.display = 'none';
     document.getElementById('quiz-screen').classList.add('active');
+    
     loadQuestion();
 }
 
 function loadQuestion() {
     const q = activeQuestions[currentIdx];
     document.getElementById('q-text').innerText = q.q;
-    document.getElementById('q-number').innerText = `Питання ${currentIdx + 1} / ${activeQuestions.length} [Режим: ${currentMode === 'exam' ? 'ЗАЛІК' : 'ТРЕНУВАННЯ'}]`;
+    document.getElementById('q-number').innerText = `${currentMode === 'exam' ? 'Іспит' : 'Тренування'} • Питання ${currentIdx + 1} / ${activeQuestions.length}`;
     document.getElementById('progress').style.width = `${(currentIdx / activeQuestions.length) * 100}%`;
     document.getElementById('explanation').style.display = 'none';
     document.getElementById('next-btn').style.display = 'none';
@@ -130,11 +134,15 @@ function loadQuestion() {
     const container = document.getElementById('options-container');
     container.innerHTML = '';
     
-    q.a.forEach((text, i) => {
+    // Перемішуємо варіанти відповідей всередині питання
+    const optionsWithIndices = q.a.map((text, i) => ({ text, i }));
+    // optionsWithIndices.sort(() => Math.random() - 0.5); // За бажанням можна перемішувати і варіанти
+
+    optionsWithIndices.forEach((opt) => {
         const div = document.createElement('div');
         div.className = 'option';
-        div.innerText = text;
-        div.onclick = () => selectOption(i, div);
+        div.innerText = opt.text;
+        div.onclick = () => selectOption(opt.i, div);
         container.appendChild(div);
     });
 }
@@ -142,6 +150,8 @@ function loadQuestion() {
 function selectOption(idx, el) {
     const q = activeQuestions[currentIdx];
     const options = document.querySelectorAll('.option');
+    
+    // Блокуємо всі варіанти після першого натискання
     options.forEach(opt => opt.classList.add('locked'));
     
     if (idx === q.c) {
@@ -149,14 +159,21 @@ function selectOption(idx, el) {
         score++;
     } else {
         el.classList.add('wrong');
-        options[q.c].classList.add('correct');
+        // У будь-якому режимі показуємо правильну відповідь для навчання
+        const correctOption = Array.from(options).find((o, i) => {
+            // Шукаємо оригінальний індекс у масиві відповідей питання
+            return activeQuestions[currentIdx].a[activeQuestions[currentIdx].c] === o.innerText;
+        });
+        if (correctOption) correctOption.classList.add('correct');
     }
 
+    // Тільки в режимі тренування показуємо текстове пояснення
     if (currentMode === 'training') {
         const exp = document.getElementById('explanation');
         exp.innerText = q.e;
         exp.style.display = 'block';
     }
+
     document.getElementById('next-btn').style.display = 'block';
 }
 
@@ -165,29 +182,30 @@ function loadNext() {
     if (currentIdx < activeQuestions.length) {
         loadQuestion();
     } else {
-        const result = { name: userName, score: `${score}/${activeQuestions.length}`, mode: currentMode };
-        if (currentMode === 'exam') localStorage.setItem('exam_done', JSON.stringify(result));
-        showFinal(result);
+        const finalResult = { 
+            name: userName, 
+            score: `${score}/${activeQuestions.length}`, 
+            mode: currentMode,
+            date: new Date().toLocaleString()
+        };
+        
+        if (currentMode === 'exam') {
+            localStorage.setItem('exam_completed_v1', JSON.stringify(finalResult));
+        }
+        showFinal(finalResult);
     }
 }
 
 function showFinal(data) {
     document.getElementById('quiz-screen').classList.remove('active');
-    document.getElementById('start-screen').classList.remove('active');
+    document.getElementById('start-screen').style.display = 'none';
+    
     const screen = document.getElementById('result-screen');
     screen.style.display = 'block';
+    
     document.getElementById('res-user').innerText = `Учень: ${data.name}`;
     document.getElementById('res-score').innerText = data.score;
-    document.getElementById('res-info').innerText = `Режим: ${data.mode === 'exam' ? 'Офіційний залік' : 'Тренування'}`;
-}
-
-function resetToMenu() {
-    // Повний ресет стану
-    currentIdx = 0;
-    score = 0;
-    document.getElementById('quiz-screen').classList.remove('active');
-    document.getElementById('result-screen').style.display = 'none';
-    document.getElementById('start-screen').classList.add('active');
+    document.getElementById('res-info').innerText = `Тип проходження: ${data.mode === 'exam' ? 'Залік' : 'Тренування'} (${data.date})`;
 }
 </script>
 </body>
